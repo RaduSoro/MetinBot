@@ -377,23 +377,24 @@ class MetinFarmBot:
         self.osk_window.un_mount()
 
     def check_telegram_message(self):
-        bot = telegram.Bot(token="1925227114:AAEUiVzZJoWKIQ6BrPYHFNQrddINn1niSeA")
-        updates = bot.get_updates()
-        if updates is not None:
-            for item in updates:
-                message = item['message']['text']
-                date = item['message']['date']
-                if message == "stop" or message == "Stop":
-                    current_time = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(time.time()))
-                    current_time = datetime.datetime.strptime(current_time,'%Y-%m-%d %H:%M:%S')
-                    current_time = current_time.replace(tzinfo=None)
-                    date = date.replace(tzinfo=None)
-                    diff =current_time - date
-
-                    if diff.total_seconds() < 60:
-                        print("EXIT")
-                        bot.sendMessage(chat_id="1859753003", text="EXITING")
-                        sys.exit(0)
+        return None
+        # bot = telegram.Bot(token="1925227114:AAEUiVzZJoWKIQ6BrPYHFNQrddINn1niSeA")
+        # updates = bot.get_updates()
+        # if updates is not None:
+        #     for item in updates:
+        #         message = item['message']['text']
+        #         date = item['message']['date']
+        #         if message == "stop" or message == "Stop":
+        #             current_time = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(time.time()))
+        #             current_time = datetime.datetime.strptime(current_time,'%Y-%m-%d %H:%M:%S')
+        #             current_time = current_time.replace(tzinfo=None)
+        #             date = date.replace(tzinfo=None)
+        #             diff =current_time - date
+        #
+        #             if diff.total_seconds() < 60:
+        #                 print("EXIT")
+        #                 bot.sendMessage(chat_id="1859753003", text="EXITING")
+        #                 sys.exit(0)
 
     def send_telegram_message(self, msg):
         # return
