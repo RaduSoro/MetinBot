@@ -21,9 +21,9 @@ def main():
     aeldra = MetinWindow('Aeldra')
     vision = Vision()
     vision.init_control_gui()
-    # sm_filter = vision.get_hsv_filter_from_controls()
-    # sm_filter = NepheriteFilter()
-    sm_filter = RuinForestFilter()
+    # sm_filter =
+    # sm_filter = NepheriteFilter()/
+    # sm_filter = RuinForestFilter()
     # sm_filter = MobInfoFilter()
 
     count = {'p': 0, 'n': 0}
@@ -31,7 +31,7 @@ def main():
         loop_time = time.time()
         screenshot = aeldra.capture()
 
-        processed_screenshot = vision.apply_hsv_filter(screenshot, hsv_filter=sm_filter)
+        processed_screenshot = vision.apply_hsv_filter(screenshot, hsv_filter=vision.get_hsv_filter_from_controls())
         print(str(aeldra.get_relative_mouse_pos()))
         cv.imshow('Video Feed', processed_screenshot)
         # print(f'{round(1 / (time.time() - loop_time),2)} FPS')

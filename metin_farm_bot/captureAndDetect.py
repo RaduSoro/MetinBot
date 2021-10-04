@@ -9,11 +9,15 @@ class CaptureAndDetect:
 
     DEBUG = False
 
-    def __init__(self, metin_window, model_path, hsv_filter):
+    def __init__(self, metin_window, model_path, hsv_filter, fishbot = False):
         self.metin_window = metin_window
+        self.fishbot = fishbot
         self.vision = Vision()
         self.hsv_filter = hsv_filter
-        self.classifier = cv.CascadeClassifier(model_path)
+        if fishbot:
+            self.classifier = None
+        else:
+            self.classifier = cv.CascadeClassifier(model_path)
 
         self.screenshot = None
         self.screenshot_time = None
@@ -30,8 +34,52 @@ class CaptureAndDetect:
 
     def start(self):
         self.stopped = False
-        t = Thread(target=self.run)
+        if self.fishbot:
+            t = Thread(target=self.run_fishbot)
+        else:
+            t = Thread(target=self.run)
         t.start()
+
+    def run_fishbot(self):
+        while not self.stopped:
+            # Take screenshot
+            screenshot = self.metin_window.capture()
+            screenshot_time = time.time()
+
+            self.lock.acquire()
+            self.screenshot = screenshot
+            self.screenshot_time = screenshot_time
+            self.lock.release()
+
+            # Preprocess image for object detection
+            processed_img = screenshot
+
+            self.processed_image = processed_img
+            # Detect objects
+            # Parse results and generate image
+            detection_time = time.time()
+            detection = None
+            detection_image = screenshot.copy()
+
+            top_left = (914, 345)
+            bottom_right = (1007, 414)
+            self.vision.draw_rectangles_predefined(detection_image,top_left,bottom_right)
+            dot_1 = (933,366)
+            dot_2 = (981,366)
+            dot_3 = (933,400)
+            dot_4 = (981,400)
+            dots = [dot_1,dot_2,dot_3,dot_4]
+            for dot in dots:
+                self.vision.draw_dots(detection_image,dot)
+            # Acquire lock and set new images
+            self.lock.acquire()
+            self.detection = detection
+            self.detection_time = detection_time
+            self.detection_image = detection_image
+            self.lock.release()
+
+            if self.DEBUG:
+                time.sleep(1)
 
     def run(self):
         while not self.stopped:

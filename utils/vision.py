@@ -62,6 +62,20 @@ class RuinForestFilter(HsvFilter):
         self.vAdd = 255
         self.vSub = 0
 
+class NormalFilter(HsvFilter):
+    def __init__(self):
+        self.hMin = 0
+        self.sMin = 0
+        self.vMin = 0
+        self.hMax = 179
+        self.sMax = 255
+        self.vMax = 255
+        self.sAdd = 0
+        self.sSub = 0
+        self.vAdd = 0
+        self.vSub = 0
+
+
 
 class NepheriteFilter(HsvFilter):
     # Night mode acitve
@@ -206,6 +220,11 @@ class Vision:
             bottom_right = (x + w, y + h)
             cv.rectangle(haystack_img, top_left, bottom_right, bgr_color, lineType=cv.LINE_4)
 
+    def draw_rectangles_predefined(self, haystack_img, top_left,bottom_right, bgr_color=(0, 255, 0)):
+        cv.rectangle(haystack_img, top_left, bottom_right, bgr_color, lineType=cv.LINE_4)
+
+    def draw_dots(self, image, dot_location):
+        image = cv.circle(image, dot_location, radius=2, color=(0, 0, 255), thickness=-1)
 
     def add_rectangles_to_image(self, image, rectangles):
         if len(rectangles > 0):
@@ -220,6 +239,10 @@ class Vision:
 
     def extract_section(self, image, top_left, bottom_right):
         return image[top_left[1] : bottom_right[1], top_left[0] : bottom_right[0]]
+
+    def extract_pixel_color(self, image, pixel):
+        x,y = pixel
+        return image[x, y]
 
     def template_match_alpha(self, haystack_img, needle_path):
         needle = cv.imread(needle_path, cv.IMREAD_UNCHANGED)

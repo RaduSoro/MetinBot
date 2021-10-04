@@ -84,7 +84,7 @@ class MetinFarmBot:
 
             if self.state == BotState.INITIALIZING:
                 self.metin_window.activate()
-                # self.respawn_if_dead()
+                self.respawn_if_dead()
                 self.teleport_back()
                 # self.osk_window.recall_mount()
                 # self.turn_on_buffs()
@@ -184,7 +184,8 @@ class MetinFarmBot:
                     self.put_info_text('ERROR TARGET')
                     total = int(time.time() - self.started)
                     avg = round(total / self.metin_count, 1)
-                    self.send_telegram_message( f'TARGET ERROR TPS BACK')
+                    self.send_telegram_message( f'Targeting error, teleporting back!')
+                    self.respawn_if_dead()
                     self.teleport_back()
                     self.calibrate_view()
                     self.switch_state(BotState.SEARCHING)
@@ -216,7 +217,7 @@ class MetinFarmBot:
                     self.last_error = time.time()
                     self.put_info_text('Error not persistent! Will restart!')
                     self.send_telegram_message('Restart')
-                    # self.respawn_if_dead()
+                    self.respawn_if_dead()
                     self.teleport_back()
                     # self.osk_window.recall_mount()
                     self.turn_on_buffs()
@@ -431,7 +432,7 @@ class MetinFarmBot:
         if match_loc is not None:
             self.send_telegram_message('Respawn cause dead!')
             self.put_info_text('Respawn!')
-            self.metin_window.mouse_move(match_loc[0], match_loc[1] + 5)
+            self.metin_window.mouse_move(151,82)
             time.sleep(0.5)
             self.metin_window.mouse_click()
             time.sleep(3)

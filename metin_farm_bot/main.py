@@ -4,13 +4,16 @@ from metin_farm_bot.captureAndDetect import CaptureAndDetect
 from utils.window import MetinWindow
 from metin_farm_bot.bot import MetinFarmBot
 import tkinter as tk
-from utils.vision import SnowManFilter, SnowManFilterRedForest, NepheriteFilter, RuinForestFilter
+from utils.vision import SnowManFilter, SnowManFilterRedForest, NepheriteFilter, RuinForestFilter, NormalFilter
 from functools import partial
+from fishbot.fishbot import  MetinFishBot
+import sys
 
+global system_stop
 
 def main():
-
     # Choose which metin
+    system_stop = False
     metin_selection = {'metin': None}
     metin_select(metin_selection)
     metin_selection = metin_selection['metin']
@@ -31,14 +34,20 @@ def main():
     if metin_selection is "lv_90":
         hsv_filter = RuinForestFilter()
         capt_detect = CaptureAndDetect(metin_window, 'classifier/cascade_rf/cascade.xml', hsv_filter)
+    if metin_selection is "fishbot":
+        hsv_filter = NormalFilter()
+        capt_detect = CaptureAndDetect(metin_window, '', hsv_filter, fishbot= True)
 
 
     # Initialize the bot
-    bot = MetinFarmBot(metin_window, metin_selection)
+    if metin_selection is not "fishbot":
+        bot = MetinFarmBot(metin_window, metin_selection)
+    else:
+        bot = MetinFishBot(metin_window, metin_selection)
     capt_detect.start()
     bot.start()
 
-    while True:
+    while not system_stop:
 
         # Get new detections
         screenshot, screenshot_time, detection, detection_time, detection_image, processed_image = capt_detect.get_info()
@@ -54,23 +63,30 @@ def main():
         detection_image = cv.addWeighted(detection_image, 1, overlay_image, 1, 0)
 
         # Display image
-        # cv.imshow('Matches', detection_image)
+        if metin_selection is "fishbot":
+            cv.imshow('Matches', detection_image)
 
         # press 'q' with the output window focused to exit.
         # waits 1 ms every loop to process key presses
         key = cv.waitKey(1)
 
+        if key == ord('k'):
+            bot.switch_to_calibrated()#calibrated
+
+
         if key == ord('q'):
             capt_detect.stop()
             bot.stop()
             cv.destroyAllWindows()
+            sys.exit("Pressed q, stopping")
             break
 
     print('Done.')
 
 def metin_select(metin_selection):
     metins = {'Neptherite': 'lv_105',
-              'Red Forest': 'lv_90'}
+              'Red Forest': 'lv_90',
+              "Fishbot": "fishbot"}
 
 
     def set_metin_cb(window, metin, metin_selection):
@@ -78,7 +94,7 @@ def metin_select(metin_selection):
         window.destroy()
 
     window = tk.Tk()
-    window.title("Metin2 Bot")
+    window.title("STUFF")
     tk.Label(window, text='Select Metin:').pack(pady=5)
 
     for button_text, label in metins.items():

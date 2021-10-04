@@ -198,6 +198,12 @@ class OskWindow(Window):
     def start_zooming_in(self):
         self.press_key(button='r', mode='down')
 
+    def press_space(self):
+        self.press_key(button='space', mode='click', count=1)
+
+    def reload_bait(self):
+        self.press_key(button='4', mode='click', count=1)
+
     def stop_zooming_in(self):
         self.press_key(button='r', mode='up')
 
