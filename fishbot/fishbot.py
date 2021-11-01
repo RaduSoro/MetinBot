@@ -90,7 +90,7 @@ class MetinFishBot:
                 }
                 pixel_data = self.get_pixel_color(previous_reading)
                 #pixel verification timer
-                time.sleep(1)
+                time.sleep(0.1)
                 if self.check_sudden_shift(pixel_data):
                     self.switch_state(BotState.CATCHING_FISH)
                 # self.switch_state(BotState.DEBUG)
@@ -98,7 +98,7 @@ class MetinFishBot:
             if self.state == BotState.CATCHING_FISH:
                 self.metin_window.activate()
                 #time to wait for fish
-                sleep_time = random.uniform(0.5,1.3)
+                sleep_time = random.uniform(1.2,1.4)
                 time.sleep(sleep_time)
                 self.action_fish_rod()
                 time.sleep(random.uniform(3,4.5))
@@ -213,7 +213,7 @@ class MetinFishBot:
 
         for dot in dots:
             new_pixel_color = self.vision.extract_pixel_color(fish_box, dot)
-            print(f"index {index} has color : {new_pixel_color[0]} {new_pixel_color[1]} {new_pixel_color[2]}")
+            # print(f"index {index} has color : {new_pixel_color[0]} {new_pixel_color[1]} {new_pixel_color[2]}")
             pixel_data[f"dot_{index}_new"] = np.array([new_pixel_color[0],new_pixel_color[1],new_pixel_color[2]])
             index+=1
         return pixel_data
