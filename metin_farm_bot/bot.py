@@ -399,9 +399,9 @@ class MetinFarmBot:
 
     def send_telegram_message(self, msg):
         # return
-        bot = telegram.Bot(token="1925227114:AAEUiVzZJoWKIQ6BrPYHFNQrddINn1niSeA")
+        bot = telegram.Bot(token="")
         # print(msg)
-        bot.sendMessage(chat_id="1859753003", text=msg)
+        bot.sendMessage(chat_id="", text=msg)
 
 
 
